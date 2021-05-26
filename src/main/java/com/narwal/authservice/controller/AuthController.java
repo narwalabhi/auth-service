@@ -2,8 +2,10 @@ package com.narwal.authservice.controller;
 
 import com.narwal.authservice.model.AuthenticationRequest;
 import com.narwal.authservice.model.AuthenticationResponse;
+import com.narwal.authservice.model.User;
 import com.narwal.authservice.security.UserDetailService;
 import com.narwal.authservice.service.JwtUtil;
+import com.narwal.authservice.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/auth")
 public class AuthController {
 
@@ -25,6 +28,9 @@ public class AuthController {
 
     @Autowired
     UserDetailService userDetailService;
+
+    @Autowired
+    UserService userService;
 
     @PostMapping()
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
@@ -41,7 +47,8 @@ public class AuthController {
 //        }
 //        final UserDetails userDetails = myUserDetailsService.loadUserByUsername(authenticationRequest.getUsername());
         final String jwt = jwtUtil.generateToken(userDetails, authentication.getAuthorities());
-        return ResponseEntity.ok(new AuthenticationResponse(jwt, jwtUtil.extractExpiration(jwt)));
+        User user = userService.getUserByEmail(authenticationRequest.getUsername());
+        return ResponseEntity.ok(new AuthenticationResponse(jwt,user));
     }
 
 

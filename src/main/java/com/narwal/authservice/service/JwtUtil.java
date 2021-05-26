@@ -51,7 +51,7 @@ public class JwtUtil {
     private String createToken(Map<String, Object> claims, String subject, Collection<? extends GrantedAuthority> authorities) {
         System.out.println(claims);
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
                 .claim("authorities", authorities.stream()
                         .map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .signWith(SignatureAlgorithm.HS256, jwtConfig.getSecret().getBytes()).compact();

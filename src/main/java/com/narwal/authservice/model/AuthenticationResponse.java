@@ -13,6 +13,6 @@ import java.util.Date;
 @Setter
 public class AuthenticationResponse {
     private String jwt;
-    private Date expiryTime;
+    private User user;
 }
 
